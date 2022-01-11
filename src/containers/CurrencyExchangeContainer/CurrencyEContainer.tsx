@@ -18,9 +18,12 @@ const CurrencyEContainer: React.FC<TProps> = props => {
       isBuying,
       amountOfBYN,
       amountOfCurrency,
-      setCurrencyAmount,
-      setAction,
-      changeCurrency,
+      // setCurrencyAmount,
+      // setAction,
+      // changeCurrency,
+      ChangeCurrentCurrencyAC,
+      ChangeCurrencyFieldAC,
+      ChangeActionAC,
    } = props;
 
    let currencyRate: number = 0;
@@ -38,25 +41,31 @@ const CurrencyEContainer: React.FC<TProps> = props => {
          const trigger: string = e.currentTarget.dataset.currency;
          if (trigger === 'byn') {
             if (value === '') {
-               setCurrencyAmount(value, value);
+               // setCurrencyAmount(value, value);
+               ChangeCurrencyFieldAC(value, value);
             } else {
-               setCurrencyAmount(value, (+Number(value).toFixed(2) / currencyRate).toFixed(2));
+               // setCurrencyAmount(value, (+Number(value).toFixed(2) / currencyRate).toFixed(2));
+               ChangeCurrencyFieldAC(value, (+Number(value).toFixed(2) / currencyRate).toFixed(2));
             }
          } else {
             if (value === '') {
-               setCurrencyAmount(value, value);
+               // setCurrencyAmount(value, value);
+               ChangeCurrencyFieldAC(value, value);
             } else {
-               setCurrencyAmount((+Number(value).toFixed(2) * currencyRate).toFixed(2), value);
+               // setCurrencyAmount((+Number(value).toFixed(2) * currencyRate).toFixed(2), value);
+               ChangeCurrencyFieldAC((+Number(value).toFixed(2) * currencyRate).toFixed(2), value);
             }
          }
       }
    };
    const changeAction = (e: React.MouseEvent<HTMLSpanElement>) => {
-      e.currentTarget.dataset.action === 'buy' ? setAction(true) : setAction(false);
+      // e.currentTarget.dataset.action === 'buy' ? setAction(true) : setAction(false);
+      e.currentTarget.dataset.action === 'buy' ? ChangeActionAC(true) : ChangeActionAC(false);
    };
 
    const changeCurrentCurrency = (e: React.MouseEvent<HTMLLIElement>) => {
-      e.currentTarget.dataset.currency && changeCurrency(e.currentTarget.dataset.currency);
+      // e.currentTarget.dataset.currency && changeCurrency(e.currentTarget.dataset.currency);
+      e.currentTarget.dataset.currency && ChangeCurrentCurrencyAC(e.currentTarget.dataset.currency);
    };
 
    return (
@@ -86,27 +95,32 @@ const mapStateToProps = ({currency}: { currency: CurrencyState }): CurrencyState
    };
 };
 
-type MapDispatchToPropsType = {
-   setCurrencyAmount: (amountOfBYN: string, amountOfCurrency: string) => void
-   setAction: (isBuying: boolean) => void
-   changeCurrency: (currency: string) => void
+// type MapDispatchToPropsType = {
+//    setCurrencyAmount: (amountOfBYN: string, amountOfCurrency: string) => void
+//    setAction: (isBuying: boolean) => void
+//    changeCurrency: (currency: string) => void
+// }
+
+// const mapDispatchToProps = (dispatch: Dispatch<CurrencyReducersTypes>): MapDispatchToPropsType => {
+//    return {
+//       setCurrencyAmount(amountOfBYN: string, amountOfCurrency: string) {
+//          dispatch(ChangeCurrencyFieldAC(amountOfBYN, amountOfCurrency));
+//       },
+//       setAction(isBuying: boolean) {
+//          dispatch(ChangeActionAC(isBuying));
+//       },
+//       changeCurrency(currency: string) {
+//          dispatch(ChangeCurrentCurrencyAC(currency));
+//       },
+//    };
+// };
+const actionCreators = {
+   ChangeCurrencyFieldAC,
+   ChangeActionAC,
+   ChangeCurrentCurrencyAC,
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<CurrencyReducersTypes>): MapDispatchToPropsType => {
-   return {
-      setCurrencyAmount(amountOfBYN: string, amountOfCurrency: string) {
-         dispatch(ChangeCurrencyFieldAC(amountOfBYN, amountOfCurrency));
-      },
-      setAction(isBuying: boolean) {
-         dispatch(ChangeActionAC(isBuying));
-      },
-      changeCurrency(currency: string) {
-         dispatch(ChangeCurrentCurrencyAC(currency));
-      },
-   };
-};
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(mapStateToProps, actionCreators);
 
 type TProps = ConnectedProps<typeof connector>;
 
